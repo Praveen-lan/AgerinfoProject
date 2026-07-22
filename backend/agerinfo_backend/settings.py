@@ -7,7 +7,7 @@ load_dotenv(Path(__file__).resolve().parent.parent.parent / '.env')
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-fallback-change-me')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY') or 'django-insecure-fallback-change-in-production'
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
 
