@@ -64,7 +64,14 @@ if DATABASE_URL and DATABASE_URL.startswith(('postgres://', 'postgresql://')):
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL)
     }
-elif not DATABASE_URL and os.getenv('DB_HOST'):
+elif os.getenv('VERCEL') or os.getenv('VERCEL_ENV'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+elif os.getenv('DB_HOST'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
