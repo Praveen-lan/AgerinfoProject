@@ -3,19 +3,55 @@
     {
       "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "admin.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api-config.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "api.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "logo.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sitemap.xml",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "i1.jpeg",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "i2.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "i3.png",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "^/api/(.*)",
       "dest": "api/index.py"
     },
     {
-      "src": "/admin/(.*)",
+      "src": "^/admin/(.*)",
       "dest": "api/index.py"
     },
     {
-      "src": "/panel/?$",
+      "src": "^/panel/?$",
       "dest": "/admin.html"
     },
     {
@@ -25,6 +61,10 @@
     {
       "src": "/media/(.*)",
       "dest": "api/index.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
