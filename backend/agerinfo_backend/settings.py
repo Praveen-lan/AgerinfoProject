@@ -59,12 +59,12 @@ WSGI_APPLICATION = 'agerinfo_backend.wsgi.application'
 
 DATABASE_URL = os.getenv('DATABASE_URL', '')
 
-if DATABASE_URL:
+if DATABASE_URL and DATABASE_URL.startswith(('postgres://', 'postgresql://')):
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL)
     }
-elif os.getenv('DB_HOST'):
+elif not DATABASE_URL and os.getenv('DB_HOST'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
