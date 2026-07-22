@@ -3,6 +3,10 @@
   "outputDirectory": ".",
   "builds": [
     {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
       "src": "admin.html",
       "use": "@vercel/static"
     },
@@ -29,8 +33,24 @@
   ],
   "routes": [
     {
+      "src": "^/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "^/admin/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
       "src": "^/panel/?$",
       "dest": "/admin.html"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "/api/index.py"
     },
     {
       "src": "/(.*)",

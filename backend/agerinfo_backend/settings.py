@@ -13,7 +13,7 @@ DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')]
 if '*' not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS += ['.onrender.com']
+    ALLOWED_HOSTS += ['.onrender.com', '.vercel.app']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -64,7 +64,7 @@ if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.config(default=DATABASE_URL)
     }
-else:
+elif os.getenv('DB_HOST'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -76,6 +76,13 @@ else:
             'OPTIONS': {
                 'charset': 'utf8mb4',
             },
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
 

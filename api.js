@@ -1,4 +1,4 @@
-const API_BASE = window.AGERINFO_API_URL || 'http://127.0.0.1:8000/api';
+const API_BASE = window.AGERINFO_API_URL || '/api';
 
 const API = {
     _token: sessionStorage.getItem('agerinfo_token') || null,
