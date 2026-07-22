@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO CODE -->
+<title>AGERinfo | Agriculture Information Hub - T.Sunil Kumar</title>
+<meta name="description" content="AGERinfo by T.Sunil Kumar. Free Agriculture tips, farming photos, Rice Plant Anatomy, Leaf Rolling, Crop Management for Indian farmers in Telugu.">
+<meta name="keywords" content="AGERinfo, Agriculture, Farming, Rice Plant Anatomy, Leaf Rolling, Crop Management, T.Sunil Kumar">
+<meta name="google-site-verification" content="YWJAHxQ-aHipLQuioacX2jPLQPfCq_1wNiUXQrW5Upo" />
+<link rel="canonical" href="https://agerinfo.netlify.app">
+<link rel="icon" href="logo.png" type="image/png"> <!-- Favicon -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"></noscript>
+
+<style>
+
+:root{
+    --primary: #2e7d32;
+    --secondary: #4CAF50;
+    --dark: #1b5e20;
+    --light: #f5fff5;
+    --text: #333;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;scroll-behavior:smooth;}
+body{background:var(--light);color:var(--text);overflow-x:hidden;}
+
+/* HEADER WITH LOGO */
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 5%;
+    background:var(--dark);
+    color:white;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 4px 15px rgba(0,0,0,0.2);
+}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo img{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:2px solid var(--secondary);
+    object-fit:cover;
+}
+.logo h2{font-size:24px;display:flex;align-items:center;gap:8px;}
+nav{display:flex;gap:25px;}
+nav a{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s;
+    position:relative;
+    font-size:15px;
+}
+nav a::after{
+    content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:var(--secondary);transition:0.3s;
+}
+nav a:hover::after{width:100%;}
+
+/* Mobile Menu */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;}
+.hamburger span{width:25px;height:3px;background:white;transition:0.3s;}
+
+/* HERO */
+.hero{
+    position:relative;
+    min-height:90vh;
+    background:url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80") center/cover no-repeat;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+}
+.overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:linear-gradient(rgba(0,0,0,.6), rgba(46,125,50,.5));
+}
+.hero-content{
+    position:relative;
+    z-index:2;
+    color:#fff;
+    animation:fadeUp 1.2s ease;
+    max-width:800px;
+}
+.hero-content h1{font-size:clamp(32px, 6vw, 60px);margin-bottom:15px;text-shadow:0 3px 10px rgba(0,0,0.5);}
+.hero-content p{font-size:clamp(16px, 2.5vw, 22px);margin-bottom:30px;}
+.search-box{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.hero-content input{
+    width:350px;max-width:100%;padding:15px 20px;border:none;border-radius:50px;outline:none;font-size:16px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+.hero-content button{
+    padding:15px 30px;border:none;border-radius:50px;background:var(--secondary);color:#fff;font-weight:700;
+    cursor:pointer;transition:.3s;box-shadow:0 5px 15px rgba(76,175,80,0.4);
+}
+.hero-content button:hover{background:var(--dark);transform:scale(1.05);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+
+/* SLIDER */
+.slider{width:95%;max-width:1200px;margin:50px auto;overflow:hidden;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+.slides{display:none;position:relative;}
+.slides img{width:100%;height:450px;object-fit:cover;border-radius:20px;}
+.fade{animation:fade 1.5s;}
+@keyframes fade{from{opacity:.4;}to{opacity:1;}}
+
+/* SECTION TITLE */
+.section-title{text-align:center;font-size:clamp(24px, 4vw, 36px);color:var(--dark);margin:60px 0 30px;font-weight:700;padding:0 20px;}
+.section-title i{color:var(--secondary);margin-right:10px;}
+
+/* PHOTO GALLERY */
+.gallery{
+    display:flex;
+    justify-content:center;
+    gap:30px;
+    padding:0 5% 60px;
+    flex-wrap:wrap;
+}
+.photo-card{
+    width:100%;
+    max-width:380px;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+    overflow:hidden;
+    transition:.4s;
+}
+.photo-card:hover{transform:translateY(-10px);box-shadow:0 15px 35px rgba(46,125,50,0.3);}
+.photo-card img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+}
+.photo-card h3{padding:20px 20px 10px;color:var(--dark);font-size:18px;text-align:center;}
+.watch-btn{
+    display:block;
+    margin:0 20px 20px;
+    text-align:center;
+    text-decoration:none;
+    background:var(--primary);
+    color:white;
+    padding:12px 25px;
+    border-radius:30px;
+    transition:.3s;
+    font-weight:600;
+}
+.watch-btn:hover{background:var(--secondary);}
+
+/* ABOUT SECTION */
+.about-section{
+    background:white;
+    padding:80px 5%;
+    display:flex;
+    align-items:center;
+    gap:50px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+.about-img{
+    width:350px;
+    max-width:100%;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(46,125,50,0.3);
+    object-fit:cover;
+    flex-shrink:0;
+}
+.about-info{max-width:600px;}
+.about-info h2{font-size:clamp(24px, 4vw, 32px);color:var(--dark);margin-bottom:15px;}
+.about-info p{font-size:16px;line-height:1.8;color:#555;margin-bottom:15px;}
+.quote-box{
+    background:var(--light);
+    border-left:4px solid var(--secondary);
+    padding:20px;
+    margin-top:20px;
+    border-radius:8px;
+    font-style:italic;
+    font-size:18px;
+    color:var(--dark);
+    font-weight:600;
+}
+.quote-box i{color:var(--secondary);margin-right:8px;}
+
+/* CARDS */
+.cards{display:flex;justify-content:center;padding:60px 5%;gap:30px;flex-wrap:wrap;}
+.card{
+    width:100%;max-width:320px;padding:30px;background:white;border-radius:15px;box-shadow:0 10px 20px rgba(0,0,0,.1);
+    text-align:center;transition:.3s;border-top:4px solid var(--secondary);
+}
+.card:hover{transform:translateY(-10px);box-shadow:0 15px 30px rgba(46,125,50,0.2);}
+.card h2{color:var(--dark);margin-bottom:10px;font-size:20px;}
+.card p{font-size:14px;color:#666;}
+.card a{
+    display:inline-block;margin-top:20px;text-decoration:none;background:var(--primary);color:white;
+    padding:12px 25px;border-radius:30px;font-weight:600;transition:.3s;
+}
+.card a:hover{background:var(--secondary);}
+
+/* STATS */
+.stats{display:flex;justify-content:center;gap:40px;padding:60px 5%;background:var(--dark);color:white;flex-wrap:wrap;}
+.stat-box{text-align:center;min-width:120px;}
+.stat-box h3{font-size:clamp(28px, 5vw, 40px);color:var(--secondary);}
+
+/* TOP BUTTON */
+#topBtn{
+    position:fixed;bottom:20px;right:20px;padding:14px 16px;border:none;border-radius:50%;
+    background:var(--primary);color:white;font-size:18px;cursor:pointer;display:none;z-index:999;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);transition:0.3s;
+}
+#topBtn:hover{background:var(--secondary);transform:scale(1.1);}
+
+/* NEWS SECTION */
+.news-section{padding:60px 5%;}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:25px;max-width:1200px;margin:0 auto;}
+.news-card{background:white;border-radius:15px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,0.1);transition:0.3s;}
+.news-card:hover{transform:translateY(-5px);box-shadow:0 12px 35px rgba(46,125,50,0.2);}
+.news-card img{width:100%;height:200px;object-fit:cover;}
+.news-card .news-body{padding:20px;}
+.news-card .news-category{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:10px;color:white;}
+.cat-general{background:#666;}.cat-weather{background:#1976d2;}.cat-market{background:#f57c00;}
+.cat-tips{background:var(--primary);}.cat-scheme{background:#7b1fa2;}.cat-pest{background:var(--danger);}
+.news-card h3{color:var(--dark);font-size:17px;margin-bottom:8px;line-height:1.4;}
+.news-card p{font-size:13px;color:#666;line-height:1.6;margin-bottom:10px;}
+.news-card .news-date{font-size:12px;color:#999;}
+.news-loading{text-align:center;padding:40px;color:#999;}
+.news-empty{text-align:center;padding:40px;color:#bbb;font-size:16px;}
+.news-nav{display:flex;justify-content:center;margin-top:30px;gap:10px;}
+.news-nav button{padding:10px 20px;border:2px solid var(--primary);background:white;color:var(--primary);border-radius:25px;cursor:pointer;font-weight:600;transition:0.3s;}
+.news-nav button:hover{background:var(--primary);color:white;}
+.news-nav button:disabled{opacity:0.4;cursor:not-allowed;}
+#newsSection .section-title a{display:block;font-size:14px;color:var(--secondary);font-weight:400;margin-top:8px;text-decoration:none;}
+
+/* DYNAMIC GALLERY LOADING */
+.dynamic-gallery{display:flex;justify-content:center;gap:30px;padding:0 5% 60px;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{padding:30px 20px;background:var(--dark);color:white;text-align:center;font-size:14px;}
+footer a{color:var(--secondary);text-decoration:none;margin:0 10px;}
+
+/* RESPONSIVE */
+@media(max-width:992px){
+    header{padding:12px 4%;}
+    nav{gap:15px;}
+}
+
+@media(max-width:768px){
+  .hamburger{display:flex;}
+    nav{
+        position:fixed;
+        top:74px;
+        right:-100%;
+        width:70%;
+        height:100vh;
+        background:var(--dark);
+        flex-direction:column;
+        padding:40px 20px;
+        transition:0.4s;
+        box-shadow:-5px 0 15px rgba(0,0,0,0.3);
+    }
+    nav.active{right:0;}
+    nav a{margin:15px 0;font-size:18px;}
+  .logo img{width:40px;height:40px;}
+  .logo h2{font-size:20px;}
+  .hero{min-height:80vh;}
+  .search-box{flex-direction:column;align-items:center;}
+  .hero-content input{width:100%;}
+  .hero-content button{width:100%;max-width:300px;}
+  .gallery{padding:0 5% 40px;}
+  .cards{padding:0 5% 40px;}
+  .stats{gap:20px;padding:40px 5%;}
+  .about-section{padding:50px 5%;gap:30px;}
+  .slides img{height:250px;}
+  .news-grid{grid-template-columns:1fr;}
+  .photo-card{max-width:100%;}
+  .card{max-width:100%;}
+}
+
+@media(max-width:480px){
+  header{padding:10px 3%;}
+  .logo h2{font-size:18px;}
+  .logo img{width:35px;height:35px;}
+  nav{width:100%;top:60px;}
+  .hero{min-height:70vh;padding:15px;}
+  .hero-content h1{font-size:28px;}
+  .hero-content p{font-size:14px;}
+  .hero-content input{padding:12px 16px;font-size:14px;}
+  .hero-content button{padding:12px 20px;font-size:14px;}
+  .slides img{height:180px;}
+  .section-title{font-size:22px;margin:40px 0 20px;}
+  .gallery{gap:15px;padding:0 4% 30px;}
+  .photo-card img{height:180px;}
+  .cards{gap:15px;padding:0 4% 30px;}
+  .card{padding:20px;}
+  .about-section{padding:30px 4%;gap:20px;}
+  .about-img{width:100%;max-width:280px;}
+  .about-info p{font-size:14px;}
+  .stats{gap:15px;padding:30px 4%;}
+  .stat-box h3{font-size:24px;}
+  .stat-box p{font-size:12px;}
+  .news-section{padding:40px 4%;}
+  footer{padding:20px 15px;font-size:12px;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="AGERinfo Logo" width="50" height="50">
+        <h2>AGERinfo</h2>
+    </div>
+    <nav id="navMenu">
+        <a href="#home" onclick="toggleMenu()">Home</a>
+        <a href="#newsSection" onclick="toggleMenu()">News</a>
+        <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#topics" onclick="toggleMenu()">Topics</a>
+        <a href="#contact" onclick="toggleMenu()">Contact</a>
+    </nav>
+    <div class="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+    </div>
+</header>
+
+<section class="hero" id="home">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1>🌾 Namaste to AGERinfo</h1>
+        <p>Your Trusted Agriculture Knowledge Hub</p>
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search topics like Leaf Rolling">
+            <button onclick="searchTopic()"><i class="fa fa-search"></i> Search</button>
+        </div>
+    </div>
+</section>
+
+<section class="slider">
+    <div class="slides fade"><img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1200&q=80" alt="Agriculture" loading="lazy" width="1200" height="450"></div>
+    <div class="slides fade"><img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1200&q=80" alt="Farming" loading="lazy" width="1200" height="450"></div>
+    <div class="slides fade"><img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80" alt="Crops" loading="lazy" width="1200" height="450"></div>
+</section>
+
+<!-- NEWS & UPDATES SECTION -->
+<section id="newsSection">
+    <h2 class="section-title"><i class="fa fa-newspaper"></i> Latest News & Updates</h2>
+    <div class="news-grid" id="newsContainer">
+        <div class="news-loading"><i class="fa fa-spinner fa-spin"></i> Loading latest news...</div>
+    </div>
+    <div class="news-nav" id="newsNav" style="display:none;">
+        <button onclick="loadMoreNews()" id="loadMoreBtn"><i class="fa fa-plus"></i> Load More</button>
+    </div>
+</section>
+
+<!-- PHOTO GALLERY SECTION -->
+<section id="gallery">
+    <h2 class="section-title"><i class="fa fa-images"></i> Agriculture Photo Gallery</h2>
+    <div class="gallery">
+
+        <div class="photo-card">
+            <img src="i1.jpeg" alt="Rice Plant Anatomy" loading="lazy" width="380" height="250">
+            <h3>Complete Anatomy of Rice Plant</h3>
+            <a href="https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw" target="_blank" class="watch-btn">Watch on YouTube <i class="fa fa-arrow-right"></i></a>
+        </div>
+
+        <!-- Photo 2 -->
+        <div class="photo-card">
+            <img src="i2.png" alt="Rice Farming Tips" loading="lazy" width="380" height="250">
+            <h3>Key objects of balanced fertilization</h3>
+            <a href="https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw" target="_blank" class="watch-btn">Watch Now <i class="fa fa-play"></i></a>
+        </div>
+
+        <!-- Photo 3 -->
+        <div class="photo-card">
+            <img src="i3.png" alt="Crop Management" loading="lazy" width="380" height="250">
+            <h3>Role of Essential plant nutrients in crop growth</h3>
+            <a href="https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw" target="_blank" class="watch-btn">Learn More <i class="fa fa-seedling"></i></a>
+        </div>
+
+    </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="about-section" id="about">
+    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80" alt="Agriculture Field" class="about-img" loading="lazy" width="350" height="350">
+
+    <div class="about-info">
+        <h2>🌾 Empowering Farmers with Knowledge</h2>
+        <p>
+            <b>Farmers Lives, Agriculture Lives</b><br><br>
+            AGERinfo is dedicated to providing free, practical and easy-to-understand agriculture knowledge to every farmer, student and agriculture lover in India.
+        </p>
+        <p>
+            Our mission is to share modern farming techniques, crop management tips and sustainable agriculture practices to build a better future for our farmers.
+        </p>
+
+        <div class="quote-box">
+            <i class="fa fa-quote-left"></i>
+            "Better Farming, Better Future - Together we grow"
+            <i class="fa fa-quote-right"></i>
+        </div>
+    </div>
+</section>
+
+<section id="topics">
+    <h2 class="section-title"><i class="fa fa-seedling"></i> Popular Topics</h2>
+    <div class="cards">
+        <div class="card">
+            <h2>🌾 Weed Management</h2>
+            <p>Complete Information about causes, prevention and treatment</p>
+            <a href="www.youtube.com/@Agerinfo" target="_blank">Watch Video</a>
+        </div>
+        <div class="card">
+            <h2>🌽 Crop Management</h2>
+            <p>Best practices for healthy crop growth and yield</p>
+            <a href="https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw" target="_blank">Explore</a>
+        </div>
+        <div class="card">
+            <h2>💧 Irrigation</h2>
+            <p>Smart water management techniques for farmers</p>
+            <a href="https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw" target="_blank">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="stat-box"><h3 id="videosCount">0</h3><p>Videos</p></div>
+    <div class="stat-box"><h3 id="topicsCount">0</h3><p>Topics</p></div>
+    <div class="stat-box"><h3 id="usersCount">0</h3><p>Farmers</p></div>
+</section>
+
+<button id="topBtn" onclick="topFunction()"><i class="fa fa-arrow-up"></i></button>
+
+<footer id="contact">
+    <p>© 2026 AGERinfo || Empowering Farmers with Knowledge 🌿</p>
+    <p style="margin-top:10px;"><a href="/panel/"><i class="fa fa-lock"></i> Admin Panel</a></p>
+</footer>
+
+<script src="api-config.js"></script>
+<script src="api.js"></script>
+
+<script>
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+// Mobile Menu Toggle
+function toggleMenu(){
+    document.getElementById("navMenu").classList.toggle("active");
+}
+
+// Search Function
+function searchTopic(){
+    let topic = document.getElementById("search").value.toLowerCase().trim();
+    const topics = {
+        "leaf rolling": "https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw",
+        "leafrolling": "https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw",
+        "rice farming": "https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw",
+        "rice": "https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw",
+        "weed": "https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw"
+    };
+    let found = false;
+    for(let key in topics){
+        if(topic.includes(key)){
+            window.open(topics[key], "_blank");
+            found = true;
+            break;
+        }
+    }
+    if(!found){
+        if(topic!= ""){
+            window.open("https://youtube.com/@agerinfo?si=PburDUPBwkqaoORw", "_blank");
+        }else{
+            alert("Please enter a topic to search");
+        }
+    }
+}
+document.getElementById("search").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){searchTopic();}
+});
+
+// Counter Animation
+function counter(id, target){
+    let count = 0;
+    let speed = target / 100;
+    let interval = setInterval(function(){
+        count += speed;
+        if(count >= target){
+            count = target;
+            clearInterval(interval);
+        }
+        document.getElementById(id).textContent = Math.floor(count) + "+";
+    },20);
+}
+counter("videosCount",61);
+counter("topicsCount",120);
+counter("usersCount",5000);
+
+// Scroll to top button
+window.onscroll=function(){
+    if(document.documentElement.scrollTop>300){
+        document.getElementById("topBtn").style.display="block";
+    }else{
+        document.getElementById("topBtn").style.display="none";
+    }
+}
+function topFunction(){
+    window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// Init and load all data
+async function initSite(){
+    try{
+        await API.init();
+    }catch(e){console.log('API init failed:', e);}
+    Promise.all([
+        loadSliderImages().catch(()=>{}),
+        loadNews().catch(()=>{}),
+        loadDynamicGallery().catch(()=>{}),
+        loadDynamicTopics().catch(()=>{})
+    ]);
+}
+
+// Image Slider
+let slideIndex = 0;
+async function loadSliderImages(){
+    try{
+        const items = await API.getData('slider');
+        if(items.length){
+            const sliderEl = document.querySelector('.slider');
+            sliderEl.innerHTML = items.slice(0,10).map(s =>
+                `<div class="slides fade"><img src="${escapeHtml(s.image)}" alt="${escapeHtml(s.caption||'')}"></div>`
+            ).join('');
+        }
+    }catch(e){console.log('Slider load failed, using defaults');}
+    showSlides();
+}
+function showSlides(){
+    let slides = document.getElementsByClassName("slides");
+    if(slides.length===0)return;
+    for(let i=0;i<slides.length;i++){slides[i].style.display="none";}
+    slideIndex++;
+    if(slideIndex > slides.length){slideIndex = 1;}
+    slides[slideIndex-1].style.display="block";
+    setTimeout(showSlides,4000);
+}
+
+// ====== DYNAMIC NEWS LOADING ======
+let newsPage = 0;
+const NEWS_PER_PAGE = 6;
+let allNews = [];
+async function loadNews(append=false){
+    try{
+        if(!append){
+            allNews = await API.getData('news');
+            newsPage = 0;
+        }
+        const start = newsPage * NEWS_PER_PAGE;
+        const pageItems = allNews.slice(start, start + NEWS_PER_PAGE);
+        if(!allNews.length){
+            document.getElementById('newsContainer').innerHTML = '<div class="news-empty"><i class="fa fa-newspaper" style="font-size:40px;display:block;margin-bottom:10px;"></i>No news yet. Check back soon!</div>';
+            return;
+        }
+        const container = document.getElementById('newsContainer');
+        if(!append) container.innerHTML = '';
+        pageItems.forEach(d => {
+            const date = d.created_at ? new Date(d.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
+            const catClass = 'cat-' + escapeHtml(d.category || 'general');
+            const catLabel = escapeHtml((d.category || 'general').charAt(0).toUpperCase() + (d.category || 'general').slice(1));
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            card.innerHTML = `
+                ${d.image ? `<img src="${escapeHtml(d.image)}" alt="${escapeHtml(d.title)}">` : ''}
+                <div class="news-body">
+                    <span class="news-category ${catClass}">${catLabel}</span>
+                    <h3>${escapeHtml(d.title)}</h3>
+                    <p>${escapeHtml((d.content||'').substring(0,150))}${(d.content||'').length>150?'...':''}</p>
+                    <div class="news-date"><i class="fa fa-clock"></i> ${escapeHtml(date)}</div>
+                </div>`;
+            container.appendChild(card);
+        });
+        newsPage++;
+        document.getElementById('newsNav').style.display = (start + NEWS_PER_PAGE < allNews.length) ? 'flex' : 'none';
+    }catch(e){
+        console.log('News load failed:', e);
+        document.getElementById('newsContainer').innerHTML = '<div class="news-empty"><i class="fa fa-newspaper" style="font-size:40px;display:block;margin-bottom:10px;"></i>News coming soon!</div>';
+    }
+}
+function loadMoreNews(){ loadNews(true); }
+
+// ====== DYNAMIC GALLERY LOADING ======
+async function loadDynamicGallery(){
+    try{
+        const items = await API.getData('gallery');
+        if(items.length){
+            const container = document.querySelector('.gallery');
+            items.slice(0,12).forEach(d => {
+                if(!d.image) return;
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.innerHTML = `
+                    <img src="${escapeHtml(d.image)}" alt="${escapeHtml(d.title)}">
+                    <h3>${escapeHtml(d.title)}</h3>
+                    ${d.description ? `<p style="padding:0 20px 10px;font-size:13px;color:#666;text-align:center;">${escapeHtml(d.description)}</p>` : ''}
+                    ${d.link ? `<a href="${escapeHtml(d.link)}" target="_blank" class="watch-btn">Watch on YouTube <i class="fa fa-arrow-right"></i></a>` : ''}`;
+                container.appendChild(card);
+            });
+        }
+    }catch(e){console.log('Gallery load failed:', e);}
+}
+
+// ====== DYNAMIC TOPICS LOADING ======
+async function loadDynamicTopics(){
+    try{
+        const items = await API.getData('topics');
+        if(items.length){
+            const container = document.querySelector('.cards');
+            container.innerHTML = '';
+            items.slice(0,12).forEach(d => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h2>${escapeHtml(d.icon||'🌾')} ${escapeHtml(d.title)}</h2>
+                    <p>${escapeHtml(d.description)}</p>
+                    <a href="${escapeHtml(d.link)}" target="_blank">Learn More</a>`;
+                container.appendChild(card);
+            });
+        }
+    }catch(e){console.log('Topics load failed:', e);}
+}
+
+initSite();
+</script>
+
+</body>
+</html>

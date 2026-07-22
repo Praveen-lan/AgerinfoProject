@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base href="/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGERinfo Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"></noscript>
+<style>
+:root{--primary:#2e7d32;--secondary:#4CAF50;--dark:#1b5e20;--light:#f5fff5;--text:#333;--danger:#e53935;--warning:#ff9800;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#f0f2f5;color:var(--text);min-height:100vh;}
+
+/* LOGIN PAGE */
+.login-page{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,var(--dark),var(--secondary));}
+.login-box{background:white;padding:40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);width:100%;max-width:400px;text-align:center;}
+.login-box h1{color:var(--dark);margin-bottom:10px;font-size:28px;}
+.login-box p{color:#666;margin-bottom:30px;font-size:14px;}
+.login-box .logo-area{margin-bottom:20px;}
+.login-box .logo-area img{width:80px;height:80px;border-radius:50%;border:3px solid var(--secondary);}
+.login-box input{width:100%;padding:14px 18px;border:2px solid #e0e0e0;border-radius:10px;font-size:15px;margin-bottom:15px;outline:none;transition:0.3s;}
+.login-box input:focus{border-color:var(--secondary);}
+.login-box button{width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:white;font-size:16px;font-weight:700;cursor:pointer;transition:0.3s;}
+.login-box button:hover{background:var(--dark);}
+.login-box .error{color:var(--danger);font-size:13px;margin-top:10px;display:none;}
+.login-box .loading{display:none;color:var(--secondary);font-size:14px;margin-top:10px;}
+
+/* ADMIN LAYOUT */
+.admin-wrapper{display:none;}
+.admin-header{background:var(--dark);color:white;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 15px rgba(0,0,0,0.2);}
+.admin-header h2{font-size:20px;}
+.admin-header .user-info{display:flex;align-items:center;gap:15px;}
+.admin-header .user-info span{font-size:14px;color:#ccc;}
+.admin-header .logout-btn{background:var(--danger);color:white;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:600;transition:0.3s;}
+.admin-header .logout-btn:hover{background:#c62828;}
+
+.admin-body{display:flex;min-height:calc(100vh - 60px);}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:white;box-shadow:2px 0 10px rgba(0,0,0,0.05);padding:20px 0;flex-shrink:0;}
+.sidebar a{display:flex;align-items:center;gap:12px;padding:14px 25px;color:var(--text);text-decoration:none;font-weight:500;transition:0.3s;font-size:15px;border-left:3px solid transparent;}
+.sidebar a:hover,.sidebar a.active{background:var(--light);color:var(--primary);border-left-color:var(--primary);}
+.sidebar a i{width:20px;text-align:center;font-size:16px;}
+
+/* MAIN CONTENT */
+.main-content{flex:1;padding:30px;overflow-y:auto;}
+.page{display:none;}
+.page.active{display:block;}
+.page-title{font-size:24px;color:var(--dark);margin-bottom:25px;font-weight:700;}
+
+/* FORMS */
+.form-card{background:white;border-radius:15px;padding:30px;box-shadow:0 5px 20px rgba(0,0,0,0.08);margin-bottom:25px;}
+.form-card h3{color:var(--dark);margin-bottom:20px;font-size:18px;padding-bottom:12px;border-bottom:2px solid var(--light);}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;margin-bottom:6px;font-weight:600;color:#555;font-size:14px;}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 15px;border:2px solid #e0e0e0;border-radius:10px;font-size:14px;outline:none;transition:0.3s;font-family:'Poppins',sans-serif;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--secondary);}
+.form-group textarea{resize:vertical;min-height:100px;}
+.form-group .file-label{display:block;padding:30px;border:2px dashed #ccc;border-radius:10px;text-align:center;cursor:pointer;transition:0.3s;color:#888;}
+.form-group .file-label:hover{border-color:var(--secondary);color:var(--secondary);}
+.form-group .file-label i{font-size:30px;display:block;margin-bottom:8px;}
+.form-group .file-label input{display:none;}
+.form-group .preview-img{max-width:200px;max-height:150px;border-radius:8px;margin-top:10px;display:none;}
+.btn{padding:12px 25px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:0.3s;font-size:14px;}
+.btn-primary{background:var(--primary);color:white;}
+.btn-primary:hover{background:var(--dark);}
+.btn-danger{background:var(--danger);color:white;}
+.btn-danger:hover{background:#c62828;}
+.btn-warning{background:var(--warning);color:white;}
+.btn-warning:hover{background:#e68900;}
+.btn-sm{padding:8px 16px;font-size:12px;border-radius:8px;}
+
+/* DATA TABLE */
+.data-table{width:100%;border-collapse:collapse;background:white;border-radius:15px;overflow:hidden;box-shadow:0 5px 20px rgba(0,0,0,0.08);}
+.data-table th{background:var(--dark);color:white;padding:14px 18px;text-align:left;font-size:14px;}
+.data-table td{padding:14px 18px;border-bottom:1px solid #f0f0f0;font-size:14px;vertical-align:middle;}
+.data-table tr:hover{background:var(--light);}
+.data-table img{width:80px;height:60px;object-fit:cover;border-radius:8px;}
+.data-table .actions{display:flex;gap:8px;}
+.empty-state{text-align:center;padding:60px 20px;color:#999;}
+.empty-state i{font-size:50px;margin-bottom:15px;color:#ddd;}
+.empty-state p{font-size:16px;}
+
+/* STATS CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px;}
+.stat-card{background:white;border-radius:15px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,0.08);text-align:center;border-top:4px solid var(--secondary);}
+.stat-card h3{font-size:32px;color:var(--primary);}
+.stat-card p{color:#666;margin-top:5px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;right:30px;padding:15px 25px;border-radius:10px;color:white;font-weight:600;z-index:9999;transform:translateY(100px);opacity:0;transition:0.4s;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:var(--primary);}
+.toast.error{background:var(--danger);}
+
+/* MENU TOGGLE */
+.menu-toggle{display:none !important;background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:5px 10px;}
+.sidebar-overlay{display:none;position:fixed;top:60px;left:0;width:100%;height:calc(100vh - 60px);background:rgba(0,0,0,0.4);z-index:98;}
+.sidebar-overlay.active{display:block;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .sidebar{position:fixed;top:60px;left:-260px;height:calc(100vh - 60px);z-index:99;transition:0.3s;width:240px;}
+    .sidebar.open{left:0;}
+    .sidebar a span{display:inline;}
+    .sidebar a{padding:14px 20px;justify-content:flex-start;}
+    .admin-body{flex-direction:column;}
+    .main-content{padding:20px;width:100%;}
+    .admin-header{padding:12px 15px;}
+    .admin-header h2{font-size:16px;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .menu-toggle{display:flex !important;}
+    .data-table-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -5px;padding:0 5px;}
+    .data-table{min-width:500px;}
+    .data-table td{white-space:normal;}
+    .form-group input,.form-group textarea,.form-group select{font-size:16px;}
+    .form-card{padding:20px;}
+    .page-title{font-size:20px;}
+    .btn{padding:10px 18px;font-size:13px;}
+}
+
+@media(max-width:480px){
+    .sidebar{width:100%;left:-100%;}
+    .sidebar.open{left:0;}
+    .stats-grid{grid-template-columns:1fr;}
+    .admin-header .user-info span{display:none;}
+    .form-card{padding:15px;border-radius:12px;}
+    .page-title{font-size:18px;margin-bottom:15px;}
+    .form-group label{font-size:13px;}
+    .data-table{min-width:420px;}
+    .data-table th,.data-table td{padding:10px 12px;font-size:13px;}
+    .data-table img{width:60px;height:45px;}
+    .btn-sm{padding:6px 12px;font-size:11px;}
+    .login-box{margin:15px;padding:25px;}
+    .login-box h1{font-size:22px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="login-page" id="loginPage">
+    <div class="login-box">
+        <div class="logo-area">
+            <img src="logo.png" alt="AGERinfo">
+        </div>
+        <h1>AGERinfo Admin</h1>
+        <p>Sign in to manage your website content</p>
+        <input type="email" id="loginEmail" placeholder="Email address">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button onclick="adminLogin()"><i class="fa fa-sign-in-alt"></i> Sign In</button>
+        <div class="error" id="loginError"></div>
+        <div class="loading" id="loginLoading"><i class="fa fa-spinner fa-spin"></i> Signing in...</div>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-wrapper" id="adminPanel">
+    <div class="admin-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <button class="menu-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+            <h2><i class="fa fa-leaf"></i> AGERinfo Admin</h2>
+        </div>
+        <div class="user-info">
+            <span id="userEmail"></span>
+            <button class="logout-btn" onclick="adminLogout()"><i class="fa fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="admin-body">
+        <div class="sidebar">
+            <a href="javascript:void(0)" class="active" onclick="showPage('dashboard',this)"><i class="fa fa-tachometer-alt"></i> <span>Dashboard</span></a>
+            <a href="javascript:void(0)" onclick="showPage('news',this)"><i class="fa fa-newspaper"></i> <span>News / Updates</span></a>
+            <a href="javascript:void(0)" onclick="showPage('gallery',this)"><i class="fa fa-images"></i> <span>Photo Gallery</span></a>
+            <a href="javascript:void(0)" onclick="showPage('slider',this)"><i class="fa fa-sliders-h"></i> <span>Slider Images</span></a>
+            <a href="javascript:void(0)" onclick="showPage('topics',this)"><i class="fa fa-seedling"></i> <span>Topics</span></a>
+        </div>
+
+        <div class="main-content">
+
+            <!-- DASHBOARD -->
+            <div class="page active" id="page-dashboard">
+                <h1 class="page-title"><i class="fa fa-tachometer-alt"></i> Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card"><h3 id="dashNewsCount">0</h3><p>News Posts</p></div>
+                    <div class="stat-card"><h3 id="dashGalleryCount">0</h3><p>Gallery Photos</p></div>
+                    <div class="stat-card"><h3 id="dashSliderCount">0</h3><p>Slider Images</p></div>
+                    <div class="stat-card"><h3 id="dashTopicsCount">0</h3><p>Topics</p></div>
+                </div>
+                <div class="form-card">
+                    <h3><i class="fa fa-bolt"></i> Quick Actions</h3>
+                    <div style="display:flex;gap:15px;flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="showPage('news')"><i class="fa fa-plus"></i> Add News</button>
+                        <button class="btn btn-primary" onclick="showPage('gallery')"><i class="fa fa-camera"></i> Add Photo</button>
+                        <button class="btn btn-primary" onclick="showPage('slider')"><i class="fa fa-image"></i> Add Slider</button>
+                        <button class="btn btn-primary" onclick="showPage('topics')"><i class="fa fa-plus"></i> Add Topic</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEWS / UPDATES PAGE -->
+            <div class="page" id="page-news">
+                <h1 class="page-title"><i class="fa fa-newspaper"></i> News & Updates</h1>
+                <div class="form-card">
+                    <h3><i class="fa fa-plus-circle"></i> <span id="newsFormTitle">Add New Post</span></h3>
+                    <input type="hidden" id="newsEditId">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="newsTitle" placeholder="Enter news title">
+                    </div>
+                    <div class="form-group">
+                        <label>Content *</label>
+                        <textarea id="newsContent" placeholder="Write the full news content..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="newsCategory">
+                            <option value="general">General</option>
+                            <option value="weather">Weather</option>
+                            <option value="market">Market Prices</option>
+                            <option value="tips">Farming Tips</option>
+                            <option value="scheme">Government Schemes</option>
+                            <option value="pest">Pest & Disease</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Photo (optional)</label>
+                        <label class="file-label" for="newsImage">
+                            <i class="fa fa-cloud-upload-alt"></i> Click to upload image
+                            <input type="file" id="newsImage" accept="image/*" onchange="previewFile('newsImage','newsImgPreview')">
+                        </label>
+                        <img id="newsImgPreview" class="preview-img">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveNews()"><i class="fa fa-save"></i> <span id="newsSaveBtn">Publish</span></button>
+                    <button class="btn btn-warning" onclick="resetNewsForm()" style="margin-left:10px;display:none;" id="newsCancelBtn">Cancel Edit</button>
+                </div>
+                <div class="form-card">
+                    <h3><i class="fa fa-list"></i> All News Posts</h3>
+                    <div id="newsList"></div>
+                </div>
+            </div>
+
+            <!-- GALLERY PAGE -->
+            <div class="page" id="page-gallery">
+                <h1 class="page-title"><i class="fa fa-images"></i> Photo Gallery</h1>
+                <div class="form-card">
+                    <h3><i class="fa fa-plus-circle"></i> <span id="galleryFormTitle">Add New Photo</span></h3>
+                    <input type="hidden" id="galleryEditId">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="galleryTitle" placeholder="Photo title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="galleryDesc" placeholder="Brief description..." style="min-height:60px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Photo *</label>
+                        <label class="file-label" for="galleryImage">
+                            <i class="fa fa-cloud-upload-alt"></i> Click to upload photo
+                            <input type="file" id="galleryImage" accept="image/*" onchange="previewFile('galleryImage','galleryImgPreview')">
+                        </label>
+                        <img id="galleryImgPreview" class="preview-img">
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube Link (optional)</label>
+                        <input type="url" id="galleryLink" placeholder="https://youtube.com/...">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveGallery()"><i class="fa fa-save"></i> <span id="gallerySaveBtn">Add Photo</span></button>
+                    <button class="btn btn-warning" onclick="resetGalleryForm()" style="margin-left:10px;display:none;" id="galleryCancelBtn">Cancel Edit</button>
+                </div>
+                <div class="form-card">
+                    <h3><i class="fa fa-list"></i> All Gallery Photos</h3>
+                    <div id="galleryList"></div>
+                </div>
+            </div>
+
+            <!-- SLIDER PAGE -->
+            <div class="page" id="page-slider">
+                <h1 class="page-title"><i class="fa fa-sliders-h"></i> Slider Images</h1>
+                <div class="form-card">
+                    <h3><i class="fa fa-plus-circle"></i> Add Slider Image</h3>
+                    <div class="form-group">
+                        <label>Image *</label>
+                        <label class="file-label" for="sliderImage">
+                            <i class="fa fa-cloud-upload-alt"></i> Click to upload slider image
+                            <input type="file" id="sliderImage" accept="image/*" onchange="previewFile('sliderImage','sliderImgPreview')">
+                        </label>
+                        <img id="sliderImgPreview" class="preview-img">
+                    </div>
+                    <div class="form-group">
+                        <label>Caption (optional)</label>
+                        <input type="text" id="sliderCaption" placeholder="Image caption">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSlider()"><i class="fa fa-save"></i> Add to Slider</button>
+                </div>
+                <div class="form-card">
+                    <h3><i class="fa fa-list"></i> Slider Images</h3>
+                    <div id="sliderList"></div>
+                </div>
+            </div>
+
+            <!-- TOPICS PAGE -->
+            <div class="page" id="page-topics">
+                <h1 class="page-title"><i class="fa fa-seedling"></i> Popular Topics</h1>
+                <div class="form-card">
+                    <h3><i class="fa fa-plus-circle"></i> <span id="topicFormTitle">Add New Topic</span></h3>
+                    <input type="hidden" id="topicEditId">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="topicTitle" placeholder="e.g. Weed Management">
+                    </div>
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea id="topicDesc" placeholder="Short description..." style="min-height:60px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Icon (emoji)</label>
+                        <input type="text" id="topicIcon" placeholder="e.g. 🌾 or 🌽" maxlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label>Link URL *</label>
+                        <input type="url" id="topicLink" placeholder="https://youtube.com/...">
+                    </div>
+                    <button class="btn btn-primary" onclick="saveTopic()"><i class="fa fa-save"></i> <span id="topicSaveBtn">Add Topic</span></button>
+                    <button class="btn btn-warning" onclick="resetTopicForm()" style="margin-left:10px;display:none;" id="topicCancelBtn">Cancel Edit</button>
+                </div>
+                <div class="form-card">
+                    <h3><i class="fa fa-list"></i> All Topics</h3>
+                    <div id="topicsList"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="api-config.js"></script>
+<script src="api.js"></script>
+
+<script>
+let appReady = false;
+
+function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+async function initApp(){
+    try{
+        await API.init();
+        appReady = true;
+        if(API.isLoggedIn()){
+            showAdmin();
+        }
+    }catch(e){
+        console.log('API init:', e.message);
+    }
+}
+
+function adminLogin(){
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if(!email || !password){showError('loginError','Please enter email and password');return;}
+    document.getElementById('loginLoading').style.display='block';
+    document.getElementById('loginError').style.display='none';
+    API.login(email, password).then(()=>{
+        document.getElementById('loginLoading').style.display='none';
+        showAdmin();
+    }).catch(err=>{
+        document.getElementById('loginLoading').style.display='none';
+        showError('loginError', err.message || 'Invalid email or password');
+    });
+}
+
+function showAdmin(){
+    document.getElementById('loginPage').style.display='none';
+    document.getElementById('adminPanel').style.display='block';
+    document.getElementById('userEmail').textContent=API.getUser();
+    Promise.all([
+        loadDashboard().catch(()=>{}),
+        loadNewsList().catch(()=>{}),
+        loadGalleryList().catch(()=>{}),
+        loadSliderList().catch(()=>{}),
+        loadTopicsList().catch(()=>{})
+    ]);
+}
+
+function adminLogout(){
+    API.logout();
+    document.getElementById('loginPage').style.display='flex';
+    document.getElementById('adminPanel').style.display='none';
+}
+
+document.getElementById('loginPassword').addEventListener('keypress',e=>{if(e.key==='Enter')adminLogin();});
+
+if(!appReady) initApp();
+
+// ====== NAVIGATION ======
+function showPage(page, el){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+page).classList.add('active');
+    document.querySelectorAll('.sidebar a').forEach(a=>a.classList.remove('active'));
+    if(el) el.classList.add('active');
+    if(window.innerWidth<=768){closeSidebar();}
+}
+
+// ====== SIDEBAR TOGGLE ======
+function toggleSidebar(){
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar(){
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
+// ====== TOAST ======
+function showToast(msg,type='success'){
+    const t=document.getElementById('toast');
+    t.textContent=msg;t.className='toast '+type+' show';
+    setTimeout(()=>{t.classList.remove('show');},3000);
+}
+function showError(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+
+// ====== FILE PREVIEW ======
+function previewFile(inputId,previewId){
+    const file=document.getElementById(inputId).files[0];
+    const preview=document.getElementById(previewId);
+    if(file){const r=new FileReader();r.onload=e=>{preview.src=e.target.result;preview.style.display='block';};r.readAsDataURL(file);}
+}
+
+// ====== DASHBOARD ======
+async function loadDashboard(){
+    try{
+        const counts=await API.getCounts();
+        document.getElementById('dashNewsCount').textContent=counts.news;
+        document.getElementById('dashGalleryCount').textContent=counts.gallery;
+        document.getElementById('dashSliderCount').textContent=counts.slider;
+        document.getElementById('dashTopicsCount').textContent=counts.topics;
+    }catch(e){console.error('Dashboard error:',e);}
+}
+
+// ====== NEWS ======
+async function saveNews(){
+    const saveBtn=document.querySelector('#page-news .btn-primary');
+    const origText='<i class="fa fa-save"></i> <span id="newsSaveBtn">Publish</span>';
+    try{
+    const id=document.getElementById('newsEditId').value;
+    const title=document.getElementById('newsTitle').value.trim();
+    const content=document.getElementById('newsContent').value.trim();
+    const category=document.getElementById('newsCategory').value;
+    const file=document.getElementById('newsImage').files[0];
+    if(!title||!content){showToast('Please fill title and content','error');return;}
+    if(saveBtn){saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa fa-spinner fa-spin"></i> Saving...';}
+    let imageUrl='';
+    if(file){imageUrl=await API.uploadImage(file);}
+    if(id){
+        const updates={title,content,category};
+        if(imageUrl) updates.image=imageUrl;
+        await API.updateItem('news', id, updates);
+        showToast('News updated successfully!');
+    }else{
+        const data={title,content,category,image:imageUrl||''};
+        await API.addItem('news', data);
+        showToast('News published successfully!');
+    }
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    resetNewsForm();loadNewsList();loadDashboard();
+    }catch(e){console.error(e);showToast('Error: '+e.message,'error');
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    }
+}
+function resetNewsForm(){
+    document.getElementById('newsEditId').value='';
+    document.getElementById('newsTitle').value='';
+    document.getElementById('newsContent').value='';
+    document.getElementById('newsCategory').value='general';
+    document.getElementById('newsImage').value='';
+    document.getElementById('newsImgPreview').style.display='none';
+    document.getElementById('newsFormTitle').textContent='Add New Post';
+    document.getElementById('newsSaveBtn').textContent='Publish';
+    document.getElementById('newsCancelBtn').style.display='none';
+}
+async function loadNewsList(){
+    try{
+    const items=await API.getData('news');
+    let html='';
+    if(!items.length){html='<div class="empty-state"><i class="fa fa-newspaper"></i><p>No news posts yet</p></div>';}
+    items.forEach(item=>{
+        const date=item.created_at?new Date(item.created_at).toLocaleDateString():'';
+        html+=`<div class="data-table-wrapper"><table class="data-table" style="margin-bottom:10px;"><tr>
+            <td style="width:100px;">${item.image?`<img src="${escapeHtml(item.image)}" loading="lazy">`:'No Image'}</td>
+            <td><b>${escapeHtml(item.title)}</b><br><small style="color:#888;">${escapeHtml(item.category)} | ${escapeHtml(date)}</small><br><small>${escapeHtml((item.content||'').substring(0,100))}...</small></td>
+            <td class="actions">
+                <button class="btn btn-warning btn-sm" onclick="editNews('${item.id}')"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="deleteNews('${item.id}')"><i class="fa fa-trash"></i></button>
+            </td></tr></table></div>`;
+    });
+    document.getElementById('newsList').innerHTML=html;
+    }catch(e){console.error(e);document.getElementById('newsList').innerHTML='<div class="empty-state"><p>Error loading news</p></div>';}
+}
+async function editNews(id){
+    const items=await API.getData('news');
+    const d=items.find(i=>i.id===id);
+    if(!d)return;
+    document.getElementById('newsEditId').value=id;
+    document.getElementById('newsTitle').value=d.title;
+    document.getElementById('newsContent').value=d.content;
+    document.getElementById('newsCategory').value=d.category||'general';
+    document.getElementById('newsFormTitle').textContent='Edit Post';
+    document.getElementById('newsSaveBtn').textContent='Update';
+    document.getElementById('newsCancelBtn').style.display='inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+async function deleteNews(id){
+    if(!confirm('Delete this news post?'))return;
+    await API.deleteItem('news', id);
+    showToast('News deleted');
+    document.querySelector(`#newsList .btn-danger[onclick*="${id}"]`)?.closest('.data-table-wrapper')?.remove();
+    loadDashboard();
+}
+
+// ====== GALLERY ======
+async function saveGallery(){
+    const saveBtn=document.querySelector('#page-gallery .btn-primary');
+    const origText='<i class="fa fa-save"></i> <span id="gallerySaveBtn">Add Photo</span>';
+    try{
+    const id=document.getElementById('galleryEditId').value;
+    const title=document.getElementById('galleryTitle').value.trim();
+    const desc=document.getElementById('galleryDesc').value.trim();
+    const link=document.getElementById('galleryLink').value.trim();
+    const file=document.getElementById('galleryImage').files[0];
+    if(!title){showToast('Please enter a title','error');return;}
+    if(saveBtn){saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa fa-spinner fa-spin"></i> Saving...';}
+    let imageUrl='';
+    if(file){imageUrl=await API.uploadImage(file);}
+    if(id){
+        const updates={title,description:desc,link:link||''};
+        if(imageUrl) updates.image=imageUrl;
+        await API.updateItem('gallery', id, updates);
+        showToast('Photo updated!');
+    }else{
+        const data={title,description:desc,link:link||'',image:imageUrl||''};
+        await API.addItem('gallery', data);
+        showToast('Photo added!');
+    }
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    resetGalleryForm();loadGalleryList();loadDashboard();
+    }catch(e){console.error(e);showToast('Error: '+e.message,'error');
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    }
+}
+function resetGalleryForm(){
+    document.getElementById('galleryEditId').value='';
+    document.getElementById('galleryTitle').value='';
+    document.getElementById('galleryDesc').value='';
+    document.getElementById('galleryLink').value='';
+    document.getElementById('galleryImage').value='';
+    document.getElementById('galleryImgPreview').style.display='none';
+    document.getElementById('galleryFormTitle').textContent='Add New Photo';
+    document.getElementById('gallerySaveBtn').textContent='Add Photo';
+    document.getElementById('galleryCancelBtn').style.display='none';
+}
+async function loadGalleryList(){
+    try{
+    const items=await API.getData('gallery');
+    let html='';
+    if(!items.length){html='<div class="empty-state"><i class="fa fa-images"></i><p>No photos yet</p></div>';}
+    items.forEach(item=>{
+        html+=`<div class="data-table-wrapper"><table class="data-table" style="margin-bottom:10px;"><tr>
+            <td style="width:100px;">${item.image?`<img src="${escapeHtml(item.image)}" loading="lazy">`:'No Image'}</td>
+            <td><b>${escapeHtml(item.title)}</b><br><small style="color:#888;">${escapeHtml(item.description||'')}</small></td>
+            <td class="actions">
+                <button class="btn btn-warning btn-sm" onclick="editGallery('${item.id}')"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="deleteGallery('${item.id}')"><i class="fa fa-trash"></i></button>
+            </td></tr></table></div>`;
+    });
+    document.getElementById('galleryList').innerHTML=html;
+    }catch(e){console.error(e);document.getElementById('galleryList').innerHTML='<div class="empty-state"><p>Error loading gallery</p></div>';}
+}
+async function editGallery(id){
+    const items=await API.getData('gallery');
+    const d=items.find(i=>i.id===id);
+    if(!d)return;
+    document.getElementById('galleryEditId').value=id;
+    document.getElementById('galleryTitle').value=d.title;
+    document.getElementById('galleryDesc').value=d.description||'';
+    document.getElementById('galleryLink').value=d.link||'';
+    document.getElementById('galleryFormTitle').textContent='Edit Photo';
+    document.getElementById('gallerySaveBtn').textContent='Update';
+    document.getElementById('galleryCancelBtn').style.display='inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+async function deleteGallery(id){
+    if(!confirm('Delete this photo?'))return;
+    await API.deleteItem('gallery', id);
+    showToast('Photo deleted');
+    document.querySelector(`#galleryList .btn-danger[onclick*="${id}"]`)?.closest('.data-table-wrapper')?.remove();
+    loadDashboard();
+}
+
+// ====== SLIDER ======
+async function saveSlider(){
+    const saveBtn=document.querySelector('#page-slider .btn-primary');
+    const origText='<i class="fa fa-save"></i> Add to Slider';
+    try{
+    const file=document.getElementById('sliderImage').files[0];
+    const caption=document.getElementById('sliderCaption').value.trim();
+    if(!file){showToast('Please select an image','error');return;}
+    if(saveBtn){saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa fa-spinner fa-spin"></i> Uploading...';}
+    const imageUrl=await API.uploadImage(file);
+    await API.addItem('slider', {image:imageUrl, caption:caption||''});
+    showToast('Slider image added!');
+    document.getElementById('sliderImage').value='';
+    document.getElementById('sliderCaption').value='';
+    document.getElementById('sliderImgPreview').style.display='none';
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    loadSliderList();loadDashboard();
+    }catch(e){console.error(e);showToast('Error: '+e.message,'error');
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    }
+}
+async function loadSliderList(){
+    try{
+    const items=await API.getData('slider');
+    let html='';
+    if(!items.length){html='<div class="empty-state"><i class="fa fa-sliders-h"></i><p>No slider images yet</p></div>';}
+    items.forEach(item=>{
+        html+=`<div class="data-table-wrapper"><table class="data-table" style="margin-bottom:10px;"><tr>
+            <td style="width:150px;"><img src="${escapeHtml(item.image)}" style="width:150px;height:80px;" loading="lazy"></td>
+            <td>${escapeHtml(item.caption||'No caption')}</td>
+            <td class="actions">
+                <button class="btn btn-danger btn-sm" onclick="deleteSlider('${item.id}')"><i class="fa fa-trash"></i></button>
+            </td></tr></table></div>`;
+    });
+    document.getElementById('sliderList').innerHTML=html;
+    }catch(e){console.error(e);document.getElementById('sliderList').innerHTML='<div class="empty-state"><p>Error loading slider</p></div>';}
+}
+async function deleteSlider(id){
+    if(!confirm('Delete this slider image?'))return;
+    await API.deleteItem('slider', id);
+    showToast('Slider image deleted');
+    document.querySelector(`#sliderList .btn-danger[onclick*="${id}"]`)?.closest('.data-table-wrapper')?.remove();
+    loadDashboard();
+}
+
+// ====== TOPICS ======
+async function saveTopic(){
+    const saveBtn=document.querySelector('#page-topics .btn-primary');
+    const origText='<i class="fa fa-save"></i> <span id="topicSaveBtn">Add Topic</span>';
+    try{
+    const id=document.getElementById('topicEditId').value;
+    const title=document.getElementById('topicTitle').value.trim();
+    const desc=document.getElementById('topicDesc').value.trim();
+    const icon=document.getElementById('topicIcon').value.trim();
+    const link=document.getElementById('topicLink').value.trim();
+    if(!title||!desc||!link){showToast('Please fill all fields','error');return;}
+    if(saveBtn){saveBtn.disabled=true;saveBtn.innerHTML='<i class="fa fa-spinner fa-spin"></i> Saving...';}
+    if(id){
+        await API.updateItem('topics', id, {title,description:desc,icon:icon||'🌾',link});
+        showToast('Topic updated!');
+    }else{
+        await API.addItem('topics', {title,description:desc,icon:icon||'🌾',link});
+        showToast('Topic added!');
+    }
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    resetTopicForm();loadTopicsList();loadDashboard();
+    }catch(e){console.error(e);showToast('Error: '+e.message,'error');
+    if(saveBtn){saveBtn.disabled=false;saveBtn.innerHTML=origText;}
+    }
+}
+function resetTopicForm(){
+    document.getElementById('topicEditId').value='';
+    document.getElementById('topicTitle').value='';
+    document.getElementById('topicDesc').value='';
+    document.getElementById('topicIcon').value='';
+    document.getElementById('topicLink').value='';
+    document.getElementById('topicFormTitle').textContent='Add New Topic';
+    document.getElementById('topicSaveBtn').textContent='Add Topic';
+    document.getElementById('topicCancelBtn').style.display='none';
+}
+async function loadTopicsList(){
+    try{
+    const items=await API.getData('topics');
+    let html='';
+    if(!items.length){html='<div class="empty-state"><i class="fa fa-seedling"></i><p>No topics yet</p></div>';}
+    items.forEach(item=>{
+        html+=`<div class="data-table-wrapper"><table class="data-table" style="margin-bottom:10px;"><tr>
+            <td style="width:50px;font-size:28px;">${escapeHtml(item.icon)}</td>
+            <td><b>${escapeHtml(item.title)}</b><br><small style="color:#888;">${escapeHtml(item.description)}</small></td>
+            <td class="actions">
+                <button class="btn btn-warning btn-sm" onclick="editTopic('${item.id}')"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="deleteTopic('${item.id}')"><i class="fa fa-trash"></i></button>
+            </td></tr></table></div>`;
+    });
+    document.getElementById('topicsList').innerHTML=html;
+    }catch(e){console.error(e);document.getElementById('topicsList').innerHTML='<div class="empty-state"><p>Error loading topics</p></div>';}
+}
+async function editTopic(id){
+    const items=await API.getData('topics');
+    const d=items.find(i=>i.id===id);
+    if(!d)return;
+    document.getElementById('topicEditId').value=id;
+    document.getElementById('topicTitle').value=d.title;
+    document.getElementById('topicDesc').value=d.description;
+    document.getElementById('topicIcon').value=d.icon;
+    document.getElementById('topicLink').value=d.link;
+    document.getElementById('topicFormTitle').textContent='Edit Topic';
+    document.getElementById('topicSaveBtn').textContent='Update';
+    document.getElementById('topicCancelBtn').style.display='inline-block';
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+async function deleteTopic(id){
+    if(!confirm('Delete this topic?'))return;
+    await API.deleteItem('topics', id);
+    showToast('Topic deleted');
+    document.querySelector(`#topicsList .btn-danger[onclick*="${id}"]`)?.closest('.data-table-wrapper')?.remove();
+    loadDashboard();
+}
+</script>
+</body>
+</html>
