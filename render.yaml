@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: agerinfo-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn agerinfo_backend.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agerinfo-db
+          property: connectionString
+
+  - type: postgres
+    name: agerinfo-db
+    databaseName: agerinfo_db
+    plan: free

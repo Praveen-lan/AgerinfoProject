@@ -154,7 +154,7 @@ body{background:#f0f2f5;color:var(--text);min-height:100vh;}
         <input type="password" id="loginPassword" placeholder="Password">
         <button onclick="adminLogin()"><i class="fa fa-sign-in-alt"></i> Sign In</button>
         <div class="error" id="loginError"></div>
-        <div class="loading" id="loginLoading"><i class="fa fa-spinner fa-spin"></i> Signing in...</div>
+        <div class="loading" id="loginLoading"><i class="fa fa-spinner fa-spin"></i> Signing in... (this may take a moment if the server is waking up)</div>
     </div>
 </div>
 
@@ -366,6 +366,16 @@ async function initApp(){
         }
     }catch(e){
         console.log('API init:', e.message);
+    }
+    checkBackendStatus();
+}
+
+async function checkBackendStatus(){
+    try{
+        const res = await fetch(API_BASE + '/counts/', { method: 'GET' });
+        if(!res.ok) throw new Error('not ok');
+    }catch(e){
+        showError('loginError', 'Backend server may be sleeping. The first login attempt may take up to 60 seconds to wake it up.');
     }
 }
 

@@ -34,3 +34,5 @@ desktop.ini
 
 # Firebase
 firebase-debug.log
+
+.vercel

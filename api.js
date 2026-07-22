@@ -13,17 +13,30 @@ const API = {
         return h;
     },
 
-    async _fetchWithTimeout(url, options = {}, timeoutMs = 15000) {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeoutMs);
-        try {
-            const res = await fetch(url, { ...options, signal: controller.signal });
-            clearTimeout(timer);
-            return res;
-        } catch (e) {
-            clearTimeout(timer);
-            if (e.name === 'AbortError') throw new Error('Request timed out');
-            throw e;
+    async _fetchWithTimeout(url, options = {}, timeoutMs = 30000, retries = 2) {
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const res = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(timer);
+                if (res.status === 502 || res.status === 503) {
+                    if (attempt < retries) {
+                        await new Promise(r => setTimeout(r, 3000 * (attempt + 1)));
+                        continue;
+                    }
+                }
+                return res;
+            } catch (e) {
+                clearTimeout(timer);
+                if (attempt < retries && (e.name === 'AbortError' || e.message.includes('Failed to fetch') || e.message.includes('NetworkError'))) {
+                    await new Promise(r => setTimeout(r, 3000 * (attempt + 1)));
+                    continue;
+                }
+                if (e.name === 'AbortError') throw new Error('Server is not responding. It may be starting up — please try again in a moment.');
+                if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError')) throw new Error('Cannot reach the server. Please check your connection.');
+                throw e;
+            }
         }
     },
 
@@ -192,10 +205,12 @@ const API = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
-        }, 15000);
+        }, 45000, 2);
         if (!res.ok) {
+            if (res.status === 404) throw new Error('Server not found. The backend may be offline.');
+            if (res.status >= 500) throw new Error('Server error. It may be starting up — please try again.');
             const data = await res.json().catch(() => ({}));
-            throw new Error(data.error || 'Login failed');
+            throw new Error(data.error || 'Login failed — check your email and password');
         }
         const data = await res.json();
         this._token = data.token;
