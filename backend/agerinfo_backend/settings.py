@@ -68,7 +68,7 @@ elif os.getenv('VERCEL') or os.getenv('VERCEL_ENV'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'NAME': '/tmp/db.sqlite3',
         }
     }
 elif os.getenv('DB_HOST'):
